@@ -16,7 +16,7 @@ const generateQuiz = async (req, res) => {
 
     const { pdfId } = req.body;
 
-    // FIND PDF
+    
     const pdf = await Pdf.findById(pdfId);
 
     if (!pdf) {
@@ -24,17 +24,16 @@ const generateQuiz = async (req, res) => {
       return res.status(404).json({
         message: "PDF not found",
       });
-    }
 
-    // PDF FILE NAME
+    }
     const pdfFileName =
       pdf.fileUrl.split("/").pop();
 
-    // PDF PATH
+    
     const pdfPath =
       `uploads/${pdfFileName}`;
 
-    // CHECK FILE
+
     if (!fs.existsSync(pdfPath)) {
 
       return res.status(404).json({
@@ -42,15 +41,15 @@ const generateQuiz = async (req, res) => {
       });
     }
 
-    // READ PDF
+    
     const dataBuffer =
       fs.readFileSync(pdfPath);
 
-    // EXTRACT TEXT
+    
     const pdfData =
       await pdfParse(dataBuffer);
 
-    // LIMIT TEXT
+    
     const extractedText =
       pdfData.text
         .replace(/\n/g, " ")
@@ -114,12 +113,12 @@ ${extractedText}
       }
     );
 
-    // RAW RESPONSE
+    
     const rawText =
       response.data.choices[0]
       .message.content;
 
-    // EXTRACT JSON
+    
     const jsonMatch =
       rawText.match(/\[[\s\S]*\]/);
 
@@ -131,11 +130,11 @@ ${extractedText}
       });
     }
 
-    // PARSE QUESTIONS
+    
     const questions =
       JSON.parse(jsonMatch[0]);
+    
 
-    // SAVE QUIZ
     const quiz = await Quiz.create({
 
       user: req.user._id,
@@ -202,7 +201,7 @@ const getQuizHistory = async (
 };
 
 
-// UPDATE QUIZ SCORE
+
 const updateQuizScore = async (
   req,
   res

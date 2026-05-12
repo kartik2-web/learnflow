@@ -20,7 +20,7 @@ const createFlashcard = async (req, res) => {
       category,
     });
 
-    // UPDATE STREAK
+    
     await updateStudyStreak(req.user._id);
 
     res.status(201).json(flashcard);
@@ -35,7 +35,7 @@ const createFlashcard = async (req, res) => {
 };
 
 
-// SAVE MULTIPLE AI FLASHCARDS
+
 const saveAIFlashcards = async (req, res) => {
   try {
 

@@ -17,7 +17,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 
-// PROTECTED ROUTE
+
 router.get("/profile", protect, getUserProfile);
 
 

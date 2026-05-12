@@ -9,7 +9,7 @@ const protect = require("../middleware/authMiddleware");
 const router = express.Router();
 
 
-// AI FLASHCARD GENERATION
+
 router.post(
   "/generate",
   protect,

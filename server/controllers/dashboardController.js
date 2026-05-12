@@ -5,7 +5,6 @@ const Pdf = require("../models/Pdf");
 const User = require("../models/User");
 
 
-// GET DASHBOARD STATS
 const getDashboardStats = async (req, res) => {
 
   try {
@@ -23,7 +22,6 @@ const getDashboardStats = async (req, res) => {
     );
 
 
-    // SIMPLE PROGRESS FORMULA
     const completionRate = Math.min(
       (
         (totalNotes + totalPdfs) * 10

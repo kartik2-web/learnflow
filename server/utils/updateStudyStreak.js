@@ -11,7 +11,7 @@ const updateStudyStreak = async (userId) => {
   const lastDate = user.lastStudyDate;
 
 
-  // FIRST TIME
+  
   if (!lastDate) {
 
     user.studyStreak = 1;
@@ -24,7 +24,7 @@ const updateStudyStreak = async (userId) => {
   }
 
 
-  // DAYS DIFFERENCE
+  
   const diffTime =
     today.getTime() - lastDate.getTime();
 
@@ -33,20 +33,20 @@ const updateStudyStreak = async (userId) => {
   );
 
 
-  // SAME DAY
+  
   if (diffDays === 0) {
     return;
   }
 
 
-  // CONTINUE STREAK
+  
   if (diffDays === 1) {
 
     user.studyStreak += 1;
 
   } else {
 
-    // RESET STREAK
+    
     user.studyStreak = 1;
   }
 

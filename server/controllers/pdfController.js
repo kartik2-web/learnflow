@@ -83,7 +83,7 @@ const getPdfs = async (
 };
 
 
-// DELETE PDF
+
 const deletePdf = async (
   req,
   res
@@ -120,7 +120,7 @@ const deletePdf = async (
 };
 
 
-// GENERATE AI SUMMARY
+
 const generateSummary = async (
   req,
   res
@@ -141,15 +141,15 @@ const generateSummary = async (
       });
     }
 
-    // FILE NAME
+    
     const pdfFileName =
       pdf.fileUrl.split("/").pop();
 
-    // FILE PATH
+    
     const pdfPath =
       `uploads/${pdfFileName}`;
 
-    // CHECK FILE
+    
     if (
       !fs.existsSync(pdfPath)
     ) {
@@ -160,11 +160,11 @@ const generateSummary = async (
       });
     }
 
-    // READ PDF
+    
     const dataBuffer =
       fs.readFileSync(pdfPath);
 
-    // EXTRACT TEXT
+    
     const pdfData =
       await pdfParse(dataBuffer);
 

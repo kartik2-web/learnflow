@@ -16,10 +16,10 @@ const protect = async (req, res, next) => {
       // GET TOKEN
       token = req.headers.authorization.split(" ")[1];
 
-      // VERIFY TOKEN
+      
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // GET USER
+      
       req.user = await User.findById(decoded.id).select("-password");
 
       next();

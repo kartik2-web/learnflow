@@ -1,7 +1,6 @@
 const axios = require("axios");
 
 
-// GENERATE AI FLASHCARDS
 const generateFlashcards = async (req, res) => {
   try {
 

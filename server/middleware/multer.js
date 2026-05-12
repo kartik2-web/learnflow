@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 });
 
 
-// FILE FILTER
+
 const fileFilter = (req, file, cb) => {
 
   if (

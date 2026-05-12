@@ -49,7 +49,7 @@ const getNotes = async (req, res) => {
 };
 
 
-// UPDATE NOTE
+
 const updateNote = async (req, res) => {
   try {
 

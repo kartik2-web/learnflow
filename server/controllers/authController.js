@@ -101,7 +101,7 @@ const registerUser = async (
       });
     }
 
-    // HASH PASSWORD
+    
     const salt =
       await bcrypt.genSalt(10);
 
@@ -163,7 +163,7 @@ const loginUser = async (
       password,
     } = req.body;
 
-    // FIND USER
+    
     const user =
       await User.findOne({ email });
 
@@ -175,7 +175,7 @@ const loginUser = async (
       });
     }
 
-    // COMPARE PASSWORD
+    
     const isMatch =
       await bcrypt.compare(
         password,
@@ -191,13 +191,13 @@ const loginUser = async (
     }
 
 
-    // UPDATE STREAK
+    
     await updateStudyStreak(
       user._id
     );
 
 
-    // GET UPDATED USER
+
     const updatedUser =
       await User.findById(user._id);
 
@@ -226,7 +226,7 @@ const loginUser = async (
 };
 
 
-// GET USER PROFILE
+
 const getUserProfile = async (
   req,
   res

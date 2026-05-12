@@ -16,7 +16,7 @@ const router = express.Router();
 router.post("/", protect, createFlashcard);
 
 
-// SAVE AI FLASHCARDS
+
 router.post(
   "/save-ai",
   protect,
