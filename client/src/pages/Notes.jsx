@@ -34,7 +34,10 @@ function Notes() {
     useRef(null);
 
 
+  // =========================
   // FETCH NOTES
+  // =========================
+
   const fetchNotes = async () => {
 
     try {
@@ -66,16 +69,22 @@ function Notes() {
   };
 
 
+  // =========================
   // SPEECH RECOGNITION
+  // =========================
+
   useEffect(() => {
 
     const SpeechRecognition =
-
       window.SpeechRecognition ||
-
       window.webkitSpeechRecognition;
 
+    // NOT SUPPORTED
     if (!SpeechRecognition) {
+
+      toast.error(
+        "Voice recognition not supported in this browser"
+      );
 
       return;
     }
@@ -89,21 +98,29 @@ function Notes() {
     recognition.interimResults =
       true;
 
-    recognition.lang = "en-US";
+    recognition.lang =
+      "en-US";
 
+    recognition.maxAlternatives =
+      1;
+
+
+    // RESULTS
     recognition.onresult =
       (event) => {
 
-      let finalTranscript =
+      let transcript =
         "";
 
       for (
-        let i = 0;
-        i < event.results.length;
+        let i =
+          event.resultIndex;
+        i <
+        event.results.length;
         i++
       ) {
 
-        finalTranscript +=
+        transcript +=
 
           event.results[i][0]
             .transcript + " ";
@@ -116,23 +133,77 @@ function Notes() {
         content:
           prev.content +
           " " +
-          finalTranscript,
+          transcript,
       }));
     };
 
-    recognition.onerror =
-      () => {
 
-      toast.error(
-        "Voice recognition error"
+    // ERRORS
+    recognition.onerror =
+      (event) => {
+
+      console.log(
+        "Speech Recognition Error:",
+        event.error
       );
 
-      setIsListening(false);
+      // PERMISSION DENIED
+      if (
+        event.error ===
+        "not-allowed"
+      ) {
+
+        toast.error(
+          "Microphone permission denied"
+        );
+      }
+
+      // NO MICROPHONE
+      else if (
+        event.error ===
+        "audio-capture"
+      ) {
+
+        toast.error(
+          "No microphone detected"
+        );
+      }
+
+      // NETWORK
+      else if (
+        event.error ===
+        "network"
+      ) {
+
+        toast.error(
+          "Network error during voice recognition"
+        );
+      }
+
+      // IGNORE ABORTED
+      else if (
+        event.error !==
+        "aborted"
+      ) {
+
+        toast.error(
+          "Voice recognition failed"
+        );
+      }
+
+      setIsListening(
+        false
+      );
     };
 
-    recognition.onend = () => {
 
-      setIsListening(false);
+    // END
+    recognition.onend =
+      () => {
+
+      setIsListening(
+        false
+      );
     };
 
     recognitionRef.current =
@@ -141,6 +212,10 @@ function Notes() {
   }, []);
 
 
+  // =========================
+  // LOAD NOTES
+  // =========================
+
   useEffect(() => {
 
     fetchNotes();
@@ -148,8 +223,12 @@ function Notes() {
   }, []);
 
 
+  // =========================
   // HANDLE INPUT
-  const handleChange = (e) => {
+  // =========================
+
+  const handleChange =
+    (e) => {
 
     setFormData({
 
@@ -161,34 +240,64 @@ function Notes() {
   };
 
 
+  // =========================
   // START LISTENING
-  const startListening = () => {
+  // =========================
 
-    if (
-      recognitionRef.current
-    ) {
+  const startListening =
+    async () => {
 
-      recognitionRef.current.start();
+    try {
 
-      setIsListening(true);
+      // ASK PERMISSION
+      await navigator
+        .mediaDevices
+        .getUserMedia({
+          audio: true,
+        });
 
-      toast.success(
-        "Voice input started"
+      if (
+        recognitionRef.current
+      ) {
+
+        recognitionRef.current
+          .start();
+
+        setIsListening(
+          true
+        );
+
+        toast.success(
+          "Voice input started"
+        );
+      }
+
+    } catch (error) {
+
+      toast.error(
+        "Please allow microphone access"
       );
     }
   };
 
 
+  // =========================
   // STOP LISTENING
-  const stopListening = () => {
+  // =========================
+
+  const stopListening =
+    () => {
 
     if (
       recognitionRef.current
     ) {
 
-      recognitionRef.current.stop();
+      recognitionRef.current
+        .stop();
 
-      setIsListening(false);
+      setIsListening(
+        false
+      );
 
       toast.success(
         "Voice input stopped"
@@ -197,10 +306,12 @@ function Notes() {
   };
 
 
+  // =========================
   // CREATE / UPDATE NOTE
-  const handleSubmit = async (
-    e
-  ) => {
+  // =========================
+
+  const handleSubmit =
+    async (e) => {
 
     e.preventDefault();
 
@@ -212,7 +323,9 @@ function Notes() {
         );
 
       // UPDATE
-      if (editingId) {
+      if (
+        editingId
+      ) {
 
         await API.put(
 
@@ -259,7 +372,9 @@ function Notes() {
         content: "",
       });
 
-      setEditingId(null);
+      setEditingId(
+        null
+      );
 
       fetchNotes();
 
@@ -272,24 +387,31 @@ function Notes() {
   };
 
 
+  // =========================
   // EDIT NOTE
-  const editNote = (
-    note
-  ) => {
+  // =========================
 
-    setEditingId(note._id);
+  const editNote =
+    (note) => {
+
+    setEditingId(
+      note._id
+    );
 
     setFormData({
       title: note.title,
-      content: note.content,
+      content:
+        note.content,
     });
   };
 
 
+  // =========================
   // DELETE NOTE
-  const deleteNote = async (
-    id
-  ) => {
+  // =========================
+
+  const deleteNote =
+    async (id) => {
 
     try {
 
@@ -329,7 +451,14 @@ function Notes() {
 
     <DashboardLayout>
 
-      <h1 className="text-5xl font-bold text-gray-800 mb-10">
+      <h1
+        className="
+
+        text-5xl font-bold
+
+        text-gray-800 mb-10
+        "
+      >
 
         Notes
 
@@ -338,17 +467,28 @@ function Notes() {
 
       {/* FORM */}
       <form
-        onSubmit={handleSubmit}
+        onSubmit={
+          handleSubmit
+        }
 
         className="
 
-        bg-white p-8 rounded-3xl
+        bg-white p-8
 
-        shadow-xl mb-10
+        rounded-3xl shadow-xl
+
+        mb-10
         "
       >
 
-        <div className="flex flex-col gap-5">
+        <div
+          className="
+
+          flex flex-col
+
+          gap-5
+          "
+        >
 
           <input
             type="text"
@@ -357,9 +497,13 @@ function Notes() {
 
             placeholder="Enter note title"
 
-            value={formData.title}
+            value={
+              formData.title
+            }
 
-            onChange={handleChange}
+            onChange={
+              handleChange
+            }
 
             className="
 
@@ -371,7 +515,14 @@ function Notes() {
 
 
           {/* VOICE BUTTONS */}
-          <div className="flex flex-wrap gap-4">
+          <div
+            className="
+
+            flex flex-wrap
+
+            gap-4
+            "
+          >
 
             <button
               type="button"
@@ -380,11 +531,15 @@ function Notes() {
                 startListening
               }
 
-              disabled={isListening}
+              disabled={
+                isListening
+              }
 
               className={`
 
-              px-6 py-3 rounded-2xl
+              px-6 py-3
+
+              rounded-2xl
 
               text-white font-bold
 
@@ -414,7 +569,9 @@ function Notes() {
 
               className="
 
-              px-6 py-3 rounded-2xl
+              px-6 py-3
+
+              rounded-2xl
 
               bg-red-500 hover:bg-red-600
 
@@ -436,9 +593,13 @@ function Notes() {
 
             placeholder="Write your note..."
 
-            value={formData.content}
+            value={
+              formData.content
+            }
 
-            onChange={handleChange}
+            onChange={
+              handleChange
+            }
 
             rows="6"
 
@@ -487,53 +648,89 @@ function Notes() {
 
         md:grid-cols-2
 
-        xl:grid-cols-3 gap-8
+        xl:grid-cols-3
+
+        gap-8
         "
       >
 
-        {notes.map((note) => (
+        {notes.map(
+          (note) => (
 
           <div
             key={note._id}
 
             className="
 
-            bg-white p-6 rounded-3xl
+            bg-white p-6
 
-            shadow-xl hover:shadow-2xl
+            rounded-3xl
+
+            shadow-xl
+
+            hover:shadow-2xl
 
             transition-all duration-300
             "
           >
 
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <h2
+              className="
+
+              text-2xl font-bold
+
+              text-gray-800 mb-4
+              "
+            >
 
               {note.title}
 
             </h2>
 
 
-            <p className="text-gray-600 mb-6 whitespace-pre-wrap">
+            <p
+              className="
+
+              text-gray-600
+
+              mb-6
+
+              whitespace-pre-wrap
+              "
+            >
 
               {note.content}
 
             </p>
 
 
-            <div className="flex gap-4">
+            <div
+              className="
+
+              flex gap-4
+              "
+            >
 
               <button
                 onClick={() =>
-                  editNote(note)
+                  editNote(
+                    note
+                  )
                 }
 
                 className="
 
-                bg-yellow-500 hover:bg-yellow-600
+                bg-yellow-500
 
-                text-white px-5 py-3
+                hover:bg-yellow-600
 
-                rounded-2xl font-semibold
+                text-white
+
+                px-5 py-3
+
+                rounded-2xl
+
+                font-semibold
                 "
               >
 
@@ -551,11 +748,17 @@ function Notes() {
 
                 className="
 
-                bg-red-500 hover:bg-red-600
+                bg-red-500
 
-                text-white px-5 py-3
+                hover:bg-red-600
 
-                rounded-2xl font-semibold
+                text-white
+
+                px-5 py-3
+
+                rounded-2xl
+
+                font-semibold
                 "
               >
 
