@@ -8,6 +8,8 @@ import API from "../api/axios";
 
 import { useTheme } from "../context/ThemeContext";
 
+import toast from "react-hot-toast";
+
 function Profile() {
 
   const { darkMode } = useTheme();
@@ -55,7 +57,9 @@ function Profile() {
 
     } catch (error) {
 
-      console.log(error);
+      toast.error(
+        "Could not load profile"
+      );
     }
   };
 
@@ -130,55 +134,26 @@ function Profile() {
 
       <PageWrapper>
 
-        <div className="max-w-7xl mx-auto px-4 md:px-0 pb-20">
+        <div className="max-w-7xl mx-auto px-2 md:px-0 pb-20">
 
-          {/* HEADER */}
-          <div className="mb-12">
-
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-
-              My Profile 👤
-
-            </h1>
-
-            <p
-              className={`
-
-              text-lg
-
-              ${
-                darkMode
-
-                  ? "text-gray-400"
-
-                  : "text-gray-500"
-              }
-              `}
-            >
-
-              Track your learning journey and achievements.
-
-            </p>
-
-          </div>
-
-
-          {/* PROFILE CARD */}
+          {/* HERO */}
           <div
-            className={`
+            className="
 
-            rounded-3xl p-10 mb-12
+            bg-gradient-to-r
+
+            from-blue-600 to-indigo-700
+
+            rounded-[36px]
+
+            p-10 md:p-14
+
+            text-white
 
             shadow-2xl
 
-            ${
-              darkMode
-
-                ? "bg-gray-900"
-
-                : "bg-white"
-            }
-            `}
+            mb-14
+            "
           >
 
             <div className="flex flex-col lg:flex-row items-center gap-10">
@@ -189,13 +164,13 @@ function Profile() {
 
                 w-40 h-40 rounded-full
 
-                bg-gradient-to-r
+                bg-white/20
 
-                from-blue-500 to-indigo-600
+                backdrop-blur-sm
 
                 flex items-center justify-center
 
-                text-7xl text-white
+                text-7xl
 
                 shadow-2xl
                 "
@@ -206,10 +181,10 @@ function Profile() {
               </div>
 
 
-              {/* INFO */}
-              <div className="flex-1">
+              {/* USER INFO */}
+              <div className="flex-1 text-center lg:text-left">
 
-                <h2 className="text-4xl font-extrabold mb-3">
+                <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
 
                   {
                     user?.name ||
@@ -217,22 +192,9 @@ function Profile() {
                     "LearnFlow User"
                   }
 
-                </h2>
+                </h1>
 
-                <p
-                  className={`
-
-                  text-lg mb-6
-
-                  ${
-                    darkMode
-
-                      ? "text-gray-400"
-
-                      : "text-gray-500"
-                  }
-                  `}
-                >
+                <p className="text-xl text-blue-100 mb-8">
 
                   {
                     user?.email ||
@@ -244,27 +206,27 @@ function Profile() {
 
 
                 {/* TAGS */}
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap justify-center lg:justify-start gap-4">
 
-                  <div className="bg-blue-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg">
+                  <div className="bg-white/20 backdrop-blur-sm px-5 py-3 rounded-2xl font-bold shadow-lg">
 
                     📚 {stats.totalNotes} Notes
 
                   </div>
 
-                  <div className="bg-pink-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg">
+                  <div className="bg-white/20 backdrop-blur-sm px-5 py-3 rounded-2xl font-bold shadow-lg">
 
                     📄 {stats.totalPdfs} PDFs
 
                   </div>
 
-                  <div className="bg-green-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg">
+                  <div className="bg-white/20 backdrop-blur-sm px-5 py-3 rounded-2xl font-bold shadow-lg">
 
                     🧠 {totalQuizzes} Quizzes
 
                   </div>
 
-                  <div className="bg-yellow-500 text-white px-5 py-3 rounded-2xl font-bold shadow-lg">
+                  <div className="bg-white/20 backdrop-blur-sm px-5 py-3 rounded-2xl font-bold shadow-lg">
 
                     🏅 {achievements} Achievements
 
@@ -280,13 +242,21 @@ function Profile() {
 
 
           {/* ANALYTICS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-14">
 
             {/* AVG SCORE */}
             <div
               className={`
 
-              rounded-3xl p-8 shadow-2xl
+              rounded-[32px]
+
+              p-8
+
+              shadow-2xl
+
+              hover:-translate-y-1
+
+              transition-all duration-300
 
               ${
                 darkMode
@@ -317,7 +287,15 @@ function Profile() {
             <div
               className={`
 
-              rounded-3xl p-8 shadow-2xl
+              rounded-[32px]
+
+              p-8
+
+              shadow-2xl
+
+              hover:-translate-y-1
+
+              transition-all duration-300
 
               ${
                 darkMode
@@ -348,7 +326,15 @@ function Profile() {
             <div
               className={`
 
-              rounded-3xl p-8 shadow-2xl
+              rounded-[32px]
+
+              p-8
+
+              shadow-2xl
+
+              hover:-translate-y-1
+
+              transition-all duration-300
 
               ${
                 darkMode
@@ -375,11 +361,19 @@ function Profile() {
             </div>
 
 
-            {/* REAL STREAK */}
+            {/* STREAK */}
             <div
               className={`
 
-              rounded-3xl p-8 shadow-2xl
+              rounded-[32px]
+
+              p-8
+
+              shadow-2xl
+
+              hover:-translate-y-1
+
+              transition-all duration-300
 
               ${
                 darkMode
@@ -410,17 +404,123 @@ function Profile() {
           </div>
 
 
+          {/* ACHIEVEMENTS SECTION */}
+          <div
+            className={`
+
+            rounded-[32px]
+
+            p-10
+
+            shadow-2xl
+
+            mb-14
+
+            ${
+              darkMode
+
+                ? "bg-gray-900"
+
+                : "bg-white"
+            }
+            `}
+          >
+
+            <h2 className="text-3xl font-bold mb-8">
+
+              Achievements 🏆
+
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-3xl p-6 shadow-xl">
+
+                <div className="text-5xl mb-4">
+
+                  🎯
+
+                </div>
+
+                <h3 className="text-2xl font-bold">
+
+                  Quiz Starter
+
+                </h3>
+
+              </div>
+
+
+              <div className="bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white rounded-3xl p-6 shadow-xl">
+
+                <div className="text-5xl mb-4">
+
+                  🚀
+
+                </div>
+
+                <h3 className="text-2xl font-bold">
+
+                  Active Learner
+
+                </h3>
+
+              </div>
+
+
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl p-6 shadow-xl">
+
+                <div className="text-5xl mb-4">
+
+                  🧠
+
+                </div>
+
+                <h3 className="text-2xl font-bold">
+
+                  Smart Thinker
+
+                </h3>
+
+              </div>
+
+
+              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-3xl p-6 shadow-xl">
+
+                <div className="text-5xl mb-4">
+
+                  🔥
+
+                </div>
+
+                <h3 className="text-2xl font-bold">
+
+                  Streak Master
+
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
           {/* MOTIVATION */}
           <div
             className="
 
             bg-gradient-to-r
 
-            from-blue-600 to-indigo-600
+            from-indigo-600 to-blue-700
 
-            text-white rounded-3xl
+            rounded-[36px]
 
-            p-10 shadow-2xl
+            p-10 md:p-12
+
+            text-white
+
+            shadow-2xl
             "
           >
 
@@ -430,10 +530,11 @@ function Profile() {
 
             </h2>
 
-            <p className="text-xl opacity-90 leading-relaxed">
+            <p className="text-xl leading-relaxed opacity-90 max-w-3xl">
 
-              Stay consistent and maintain your learning streak.
-              Every study session makes you stronger.
+              Every quiz, every note, and every study session
+              moves you closer to mastery.
+              Stay consistent and keep learning.
 
             </p>
 

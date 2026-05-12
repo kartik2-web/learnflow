@@ -44,34 +44,43 @@ function Dashboard() {
 
     try {
 
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem(
+          "token"
+        );
 
-      const { data } = await API.get(
-        "/dashboard/stats",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } =
+        await API.get(
+          "/dashboard/stats",
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
 
       setStats(data);
 
     } catch (error) {
 
-      toast.error("Failed to fetch dashboard");
+      toast.error(
+        "Could not load dashboard"
+      );
     }
   };
 
 
   // FETCH QUIZ HISTORY
-  const fetchQuizHistory = async () => {
+  const fetchQuizHistory =
+    async () => {
 
     try {
 
-      const { data } = await API.get(
-        "/quiz/history"
-      );
+      const { data } =
+        await API.get(
+          "/quiz/history"
+        );
 
       setQuizHistory(data);
 
@@ -132,46 +141,6 @@ function Dashboard() {
       : 0;
 
 
-  // ACHIEVEMENTS
-  const achievements = [];
-
-  if (totalQuizzes >= 1) {
-
-    achievements.push({
-      title: "First Quiz Completed",
-      icon: "🎯",
-      color: "from-blue-500 to-indigo-600",
-    });
-  }
-
-  if (totalQuizzes >= 5) {
-
-    achievements.push({
-      title: "Quiz Explorer",
-      icon: "🚀",
-      color: "from-pink-500 to-fuchsia-600",
-    });
-  }
-
-  if (averageScore >= 70) {
-
-    achievements.push({
-      title: "Smart Learner",
-      icon: "🧠",
-      color: "from-green-500 to-emerald-600",
-    });
-  }
-
-  if (bestScore === 100) {
-
-    achievements.push({
-      title: "Perfect Score",
-      icon: "🏆",
-      color: "from-yellow-500 to-orange-500",
-    });
-  }
-
-
   // CHART DATA
   const chartData =
     quizHistory
@@ -189,6 +158,13 @@ function Dashboard() {
       }));
 
 
+  // RECENT ACTIVITY
+  const recentActivity =
+    quizHistory
+      .slice(-3)
+      .reverse();
+
+
   return (
 
     <DashboardLayout>
@@ -202,56 +178,52 @@ function Dashboard() {
 
           transition-all duration-300
 
-          px-4 md:px-0 pb-20
+          px-2 md:px-0 pb-20
 
           ${
             darkMode
 
-              ? "bg-gray-950 text-white"
+              ? "text-white"
 
-              : "bg-gray-100 text-gray-900"
+              : "text-gray-900"
           }
           `}
         >
 
-          {/* HEADER */}
-          <div className="mb-12">
+          {/* HERO SECTION */}
+          <div
+            className={`
 
-            <h1
-              className={`
+            rounded-[36px]
 
-              text-3xl md:text-5xl font-extrabold mb-4
+            p-8 md:p-12
 
-              ${
-                darkMode
+            mb-12
 
-                  ? "text-white"
+            shadow-2xl
 
-                  : "text-gray-800"
-              }
-              `}
-            >
+            transition-all duration-300
+
+            ${
+              darkMode
+
+                ? "bg-gradient-to-r from-blue-700 to-indigo-900"
+
+                : "bg-gradient-to-r from-blue-500 to-indigo-600"
+            }
+            `}
+          >
+
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-5">
 
               Welcome Back 👋
 
             </h1>
 
-            <p
-              className={`
+            <p className="text-lg md:text-xl text-blue-100 leading-relaxed max-w-3xl">
 
-              text-lg
-
-              ${
-                darkMode
-
-                  ? "text-gray-400"
-
-                  : "text-gray-500"
-              }
-              `}
-            >
-
-              Track your learning progress and AI quizzes.
+              Continue your AI-powered learning journey,
+              track your progress, and level up your study habits.
 
             </p>
 
@@ -259,24 +231,24 @@ function Dashboard() {
 
 
           {/* MAIN STATS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-14">
 
             {/* NOTES */}
-            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8 rounded-3xl shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8 rounded-[32px] shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-              <h2 className="text-2xl font-bold mb-5">
+              <h2 className="text-2xl font-bold mb-4">
 
                 Notes
 
               </h2>
 
-              <p className="text-6xl font-extrabold mb-6">
+              <p className="text-6xl font-extrabold mb-4">
 
                 {stats.totalNotes}
 
               </p>
 
-              <p className="text-lg opacity-90">
+              <p className="opacity-90">
 
                 Total notes created
 
@@ -286,21 +258,21 @@ function Dashboard() {
 
 
             {/* PDFs */}
-            <div className="bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white p-8 rounded-3xl shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white p-8 rounded-[32px] shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-              <h2 className="text-2xl font-bold mb-5">
+              <h2 className="text-2xl font-bold mb-4">
 
-                PDFs Uploaded
+                PDFs
 
               </h2>
 
-              <p className="text-6xl font-extrabold mb-6">
+              <p className="text-6xl font-extrabold mb-4">
 
                 {stats.totalPdfs}
 
               </p>
 
-              <p className="text-lg opacity-90">
+              <p className="opacity-90">
 
                 Study materials uploaded
 
@@ -310,23 +282,23 @@ function Dashboard() {
 
 
             {/* PROGRESS */}
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-8 rounded-3xl shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-8 rounded-[32px] shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-              <h2 className="text-2xl font-bold mb-5">
+              <h2 className="text-2xl font-bold mb-4">
 
                 Progress
 
               </h2>
 
-              <p className="text-6xl font-extrabold mb-6">
+              <p className="text-6xl font-extrabold mb-4">
 
                 {stats.completionRate}%
 
               </p>
 
-              <p className="text-lg opacity-90">
+              <p className="opacity-90">
 
-                Overall completion rate
+                Learning completion rate
 
               </p>
 
@@ -334,23 +306,23 @@ function Dashboard() {
 
 
             {/* STREAK */}
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-8 rounded-3xl shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-8 rounded-[32px] shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-              <h2 className="text-2xl font-bold mb-5">
+              <h2 className="text-2xl font-bold mb-4">
 
-                Study Streak
+                Streak
 
               </h2>
 
-              <p className="text-6xl font-extrabold mb-6">
+              <p className="text-6xl font-extrabold mb-4">
 
                 🔥 {stats.studyStreak}
 
               </p>
 
-              <p className="text-lg opacity-90">
+              <p className="opacity-90">
 
-                Consecutive learning days
+                Consistent learning days
 
               </p>
 
@@ -359,34 +331,80 @@ function Dashboard() {
           </div>
 
 
-          {/* QUIZ ANALYTICS */}
-          <div className="mb-12">
+          {/* ANALYTICS */}
+          <div
+            className={`
 
-            <h2 className="text-3xl font-bold mb-8">
+            rounded-[32px]
 
-              Quiz Analytics 📈
+            p-8 md:p-10
 
-            </h2>
+            shadow-2xl
+
+            mb-14
+
+            ${
+              darkMode
+
+                ? "bg-gray-900"
+
+                : "bg-white"
+            }
+            `}
+          >
+
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-4">
+
+              <div>
+
+                <h2 className="text-3xl md:text-4xl font-bold mb-3">
+
+                  Performance Analytics 📈
+
+                </h2>
+
+                <p
+                  className={`
+
+                  ${
+                    darkMode
+
+                      ? "text-gray-400"
+
+                      : "text-gray-500"
+                  }
+                  `}
+                >
+
+                  Monitor quiz performance and learning progress.
+
+                </p>
+
+              </div>
+
+            </div>
 
 
+            {/* SCORE CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
 
-              {/* TOTAL QUIZZES */}
               <div
                 className={`
 
-                rounded-3xl p-8 shadow-2xl
+                rounded-3xl p-8
+
+                shadow-xl
+
+                hover:-translate-y-1
 
                 transition-all duration-300
-
-                hover:scale-105
 
                 ${
                   darkMode
 
-                    ? "bg-gray-900"
+                    ? "bg-gray-800"
 
-                    : "bg-white"
+                    : "bg-gray-50"
                 }
                 `}
               >
@@ -406,22 +424,23 @@ function Dashboard() {
               </div>
 
 
-              {/* AVERAGE SCORE */}
               <div
                 className={`
 
-                rounded-3xl p-8 shadow-2xl
+                rounded-3xl p-8
+
+                shadow-xl
+
+                hover:-translate-y-1
 
                 transition-all duration-300
-
-                hover:scale-105
 
                 ${
                   darkMode
 
-                    ? "bg-gray-900"
+                    ? "bg-gray-800"
 
-                    : "bg-white"
+                    : "bg-gray-50"
                 }
                 `}
               >
@@ -441,22 +460,23 @@ function Dashboard() {
               </div>
 
 
-              {/* BEST SCORE */}
               <div
                 className={`
 
-                rounded-3xl p-8 shadow-2xl
+                rounded-3xl p-8
+
+                shadow-xl
+
+                hover:-translate-y-1
 
                 transition-all duration-300
-
-                hover:scale-105
 
                 ${
                   darkMode
 
-                    ? "bg-gray-900"
+                    ? "bg-gray-800"
 
-                    : "bg-white"
+                    : "bg-gray-50"
                 }
                 `}
               >
@@ -478,143 +498,205 @@ function Dashboard() {
             </div>
 
 
-            {/* PERFORMANCE CHART */}
-            <div
-              className={`
+            {/* CHART */}
+            {
+              chartData.length === 0 ? (
 
-              rounded-3xl p-8 shadow-2xl
+              <div className="text-center py-20">
 
-              transition-all duration-300 mb-12
+                <h2 className="text-3xl font-bold mb-4">
 
-              ${
-                darkMode
-
-                  ? "bg-gray-900"
-
-                  : "bg-white"
-              }
-              `}
-            >
-
-              <div className="flex justify-between items-center mb-8">
-
-                <h2 className="text-3xl font-bold">
-
-                  Performance Trend 📊
+                  No Quiz Data Yet 🧠
 
                 </h2>
 
+                <p
+                  className={`
+
+                  text-lg
+
+                  ${
+                    darkMode
+
+                      ? "text-gray-400"
+
+                      : "text-gray-500"
+                  }
+                  `}
+                >
+
+                  Generate quizzes to start tracking your performance.
+
+                </p>
+
               </div>
 
+            ) : (
 
-              {
-                chartData.length === 0 ? (
+              <div className="w-full h-[350px]">
 
-                <div className="text-center py-16">
+                <ResponsiveContainer
+                  width="100%"
+                  height="100%"
+                >
 
-                  <p className="text-xl text-gray-500 dark:text-gray-400">
-
-                    No quiz data available yet.
-
-                  </p>
-
-                </div>
-
-              ) : (
-
-                <div className="w-full h-[350px]">
-
-                  <ResponsiveContainer
-                    width="100%"
-                    height="100%"
+                  <LineChart
+                    data={chartData}
                   >
 
-                    <LineChart
-                      data={chartData}
-                    >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                    />
 
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                      />
+                    <XAxis
+                      dataKey="name"
+                    />
 
-                      <XAxis
-                        dataKey="name"
-                      />
+                    <YAxis />
 
-                      <YAxis />
+                    <Tooltip />
 
-                      <Tooltip />
+                    <Line
+                      type="monotone"
+                      dataKey="score"
+                      stroke="#2563eb"
+                      strokeWidth={4}
+                    />
 
-                      <Line
-                        type="monotone"
-                        dataKey="score"
-                        stroke="#2563eb"
-                        strokeWidth={4}
-                      />
+                  </LineChart>
 
-                    </LineChart>
+                </ResponsiveContainer>
 
-                  </ResponsiveContainer>
+              </div>
 
-                </div>
-
-              )}
-
-            </div>
+            )}
 
           </div>
 
 
-          {/* ACHIEVEMENTS */}
-          {
-            achievements.length > 0 && (
+          {/* RECENT ACTIVITY */}
+          <div
+            className={`
 
-            <div className="mb-12">
+            rounded-[32px]
 
-              <h2 className="text-3xl font-bold mb-8">
+            p-8 md:p-10
 
-                Achievements 🏅
+            shadow-2xl
 
-              </h2>
+            mb-14
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            ${
+              darkMode
+
+                ? "bg-gray-900"
+
+                : "bg-white"
+            }
+            `}
+          >
+
+            <h2 className="text-3xl font-bold mb-8">
+
+              Recent Activity ⚡
+
+            </h2>
+
+            {
+              recentActivity.length === 0 ? (
+
+              <div className="text-center py-10">
+
+                <p
+                  className={`
+
+                  text-lg
+
+                  ${
+                    darkMode
+
+                      ? "text-gray-400"
+
+                      : "text-gray-500"
+                  }
+                  `}
+                >
+
+                  No recent activity available.
+
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div className="space-y-6">
 
                 {
-                  achievements.map(
-                    (achievement, index) => (
+                  recentActivity.map(
+                    (quiz, index) => (
 
                     <div
                       key={index}
 
                       className={`
 
-                      bg-gradient-to-r
+                      flex items-center justify-between
 
-                      ${achievement.color}
-
-                      text-white
-
-                      rounded-3xl p-8
-
-                      shadow-2xl
-
-                      hover:scale-105
+                      p-6 rounded-3xl
 
                       transition-all duration-300
+
+                      hover:-translate-y-1
+
+                      ${
+                        darkMode
+
+                          ? "bg-gray-800"
+
+                          : "bg-gray-50"
+                      }
                       `}
                     >
 
-                      <div className="text-5xl mb-5">
+                      <div>
 
-                        {achievement.icon}
+                        <h3 className="text-xl font-bold mb-2">
+
+                          Quiz Completed
+
+                        </h3>
+
+                        <p
+                          className={`
+
+                          ${
+                            darkMode
+
+                              ? "text-gray-400"
+
+                              : "text-gray-500"
+                          }
+                          `}
+                        >
+
+                          Score:
+                          {" "}
+                          {Math.round(
+                            (quiz.score /
+                              quiz.totalQuestions) *
+                              100
+                          )}%
+
+                        </p>
 
                       </div>
 
-                      <h3 className="text-2xl font-bold">
+                      <div className="text-4xl">
 
-                        {achievement.title}
+                        🎯
 
-                      </h3>
+                      </div>
 
                     </div>
 
@@ -623,63 +705,28 @@ function Dashboard() {
 
               </div>
 
-            </div>
+            )}
 
-          )}
+          </div>
 
 
-          {/* EMPTY STATE */}
-          {
-            stats.totalNotes === 0 &&
-            stats.totalPdfs === 0 && (
+          {/* MOTIVATION */}
+          <div className="bg-gradient-to-r from-indigo-600 to-blue-700 text-white rounded-[32px] p-10 shadow-2xl">
 
-            <div
-              className={`
+            <h2 className="text-4xl font-bold mb-5">
 
-              mt-16 rounded-3xl p-16
+              Keep Learning 🚀
 
-              text-center shadow-2xl
+            </h2>
 
-              transition-all duration-300
+            <p className="text-xl leading-relaxed opacity-90 max-w-3xl">
 
-              ${
-                darkMode
+              Small consistent study sessions create long-term success.
+              Stay focused and keep improving every day.
 
-                  ? "bg-gray-900"
+            </p>
 
-                  : "bg-white"
-              }
-              `}
-            >
-
-              <h2 className="text-4xl font-bold mb-5">
-
-                Nothing Here Yet 📚
-
-              </h2>
-
-              <p
-                className={`
-
-                text-lg
-
-                ${
-                  darkMode
-
-                    ? "text-gray-400"
-
-                    : "text-gray-500"
-                }
-                `}
-              >
-
-                Start uploading notes to begin learning.
-
-              </p>
-
-            </div>
-
-          )}
+          </div>
 
         </div>
 

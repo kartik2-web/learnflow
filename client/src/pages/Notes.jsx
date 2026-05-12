@@ -55,7 +55,7 @@ function Notes() {
     } catch (error) {
 
       toast.error(
-        "Failed to fetch notes"
+        "Could not load notes"
       );
     }
   };
@@ -125,7 +125,7 @@ function Notes() {
         );
 
         toast.success(
-          "Note Updated"
+          "Note updated successfully"
         );
 
       }
@@ -148,7 +148,7 @@ function Notes() {
         );
 
         toast.success(
-          "Note Created"
+          "Note created successfully"
         );
       }
 
@@ -166,7 +166,7 @@ function Notes() {
     } catch (error) {
 
       toast.error(
-        "Operation Failed"
+        "Could not save note"
       );
     }
   };
@@ -188,6 +188,10 @@ function Notes() {
       content:
         note.content,
     });
+
+    toast.success(
+      "Editing note"
+    );
   };
 
 
@@ -218,7 +222,7 @@ function Notes() {
       );
 
       toast.success(
-        "Note Deleted"
+        "Note deleted successfully"
       );
 
       fetchNotes();
@@ -226,7 +230,7 @@ function Notes() {
     } catch (error) {
 
       toast.error(
-        "Delete Failed"
+        "Could not delete note"
       );
     }
   };
@@ -236,208 +240,341 @@ function Notes() {
 
     <DashboardLayout>
 
-      <h1
-        className="
-        text-5xl font-bold
-        text-gray-800 mb-10
-        "
-      >
+      <div className="px-2 md:px-0 pb-20">
 
-        Notes
+        {/* HEADER */}
+        <div className="mb-12">
 
-      </h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 dark:text-white mb-4">
 
+            My Notes 📝
 
-      {/* FORM */}
-      <form
-        onSubmit={
-          handleSubmit
-        }
+          </h1>
 
-        className="
-        bg-white p-8
-        rounded-3xl shadow-xl
-        mb-10
-        "
-      >
+          <p className="text-lg text-gray-500 dark:text-gray-400">
 
-        <div
-          className="
-          flex flex-col
-          gap-5
-          "
-        >
+            Organize your learning notes and study smarter.
 
-          <input
-            type="text"
-
-            name="title"
-
-            placeholder="Enter note title"
-
-            value={
-              formData.title
-            }
-
-            onChange={
-              handleChange
-            }
-
-            className="
-            border border-gray-300
-            rounded-2xl p-4
-            "
-          />
-
-
-          <textarea
-            name="content"
-
-            placeholder="Write your note..."
-
-            value={
-              formData.content
-            }
-
-            onChange={
-              handleChange
-            }
-
-            rows="6"
-
-            className="
-            border border-gray-300
-            rounded-2xl p-4
-            "
-          />
-
-
-          <button
-            className="
-            bg-blue-600 hover:bg-blue-700
-            text-white px-8 py-4
-            rounded-2xl font-semibold
-            transition-all duration-300
-            "
-          >
-
-            {
-              editingId
-
-                ? "Update Note"
-
-                : "Create Note"
-            }
-
-          </button>
+          </p>
 
         </div>
 
-      </form>
 
+        {/* FORM */}
+        <form
+          onSubmit={
+            handleSubmit
+          }
 
-      {/* NOTES LIST */}
-      <div
-        className="
-        grid grid-cols-1
-        md:grid-cols-2
-        xl:grid-cols-3
-        gap-8
-        "
-      >
+          className="
 
-        {notes.map(
-          (note) => (
+          bg-white dark:bg-gray-900
+
+          p-8 md:p-10
+
+          rounded-[32px]
+
+          shadow-2xl
+
+          mb-12
+
+          transition-all duration-300
+          "
+        >
 
           <div
-            key={note._id}
-
             className="
-            bg-white p-6
-            rounded-3xl
-            shadow-xl
-            hover:shadow-2xl
-            transition-all duration-300
+            flex flex-col
+            gap-6
             "
           >
 
-            <h2
+            <input
+              type="text"
+
+              name="title"
+
+              placeholder="Enter note title"
+
+              value={
+                formData.title
+              }
+
+              onChange={
+                handleChange
+              }
+
               className="
-              text-2xl font-bold
-              text-gray-800 mb-4
+
+              border border-gray-300 dark:border-gray-700
+
+              bg-white dark:bg-gray-800
+
+              rounded-2xl
+
+              p-5
+
+              outline-none
+
+              focus:ring-2 focus:ring-blue-500
+
+              transition-all duration-300
+              "
+            />
+
+
+            <textarea
+              name="content"
+
+              placeholder="Write your study notes here..."
+
+              value={
+                formData.content
+              }
+
+              onChange={
+                handleChange
+              }
+
+              rows="7"
+
+              className="
+
+              border border-gray-300 dark:border-gray-700
+
+              bg-white dark:bg-gray-800
+
+              rounded-2xl
+
+              p-5
+
+              outline-none
+
+              focus:ring-2 focus:ring-blue-500
+
+              transition-all duration-300
+              "
+            />
+
+
+            <button
+              className="
+
+              bg-gradient-to-r
+
+              from-blue-600 to-indigo-600
+
+              hover:from-blue-700 hover:to-indigo-700
+
+              text-white
+
+              px-8 py-4
+
+              rounded-2xl
+
+              font-bold
+
+              shadow-xl
+
+              hover:-translate-y-1
+
+              transition-all duration-300
               "
             >
 
-              {note.title}
+              {
+                editingId
 
-            </h2>
+                  ? "Update Note"
 
+                  : "Create Note"
+              }
 
-            <p
-              className="
-              text-gray-600
-              mb-6
-              whitespace-pre-wrap
-              "
-            >
-
-              {note.content}
-
-            </p>
-
-
-            <div
-              className="
-              flex gap-4
-              "
-            >
-
-              <button
-                onClick={() =>
-                  editNote(note)
-                }
-
-                className="
-                bg-yellow-500
-                hover:bg-yellow-600
-                text-white
-                px-5 py-3
-                rounded-2xl
-                font-semibold
-                "
-              >
-
-                Edit
-
-              </button>
-
-
-              <button
-                onClick={() =>
-                  deleteNote(
-                    note._id
-                  )
-                }
-
-                className="
-                bg-red-500
-                hover:bg-red-600
-                text-white
-                px-5 py-3
-                rounded-2xl
-                font-semibold
-                "
-              >
-
-                Delete
-
-              </button>
-
-            </div>
+            </button>
 
           </div>
 
-        ))}
+        </form>
+
+
+        {/* EMPTY STATE */}
+        {
+          notes.length === 0 ? (
+
+          <div
+            className="
+
+            bg-white dark:bg-gray-900
+
+            rounded-[32px]
+
+            shadow-2xl
+
+            p-16
+
+            text-center
+            "
+          >
+
+            <div className="text-7xl mb-6">
+
+              📝
+
+            </div>
+
+            <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
+
+              No Notes Yet
+
+            </h2>
+
+            <p className="text-lg text-gray-500 dark:text-gray-400">
+
+              Create your first study note to begin learning smarter.
+
+            </p>
+
+          </div>
+
+        ) : (
+
+          /* NOTES GRID */
+          <div
+            className="
+            grid grid-cols-1
+            md:grid-cols-2
+            xl:grid-cols-3
+            gap-8
+            "
+          >
+
+            {notes.map(
+              (note) => (
+
+              <div
+                key={note._id}
+
+                className="
+
+                bg-white dark:bg-gray-900
+
+                p-7
+
+                rounded-[32px]
+
+                shadow-2xl
+
+                hover:-translate-y-1
+
+                hover:shadow-3xl
+
+                transition-all duration-300
+                "
+              >
+
+                <h2
+                  className="
+                  text-2xl font-bold
+                  text-gray-800 dark:text-white
+                  mb-4
+                  "
+                >
+
+                  {note.title}
+
+                </h2>
+
+
+                <p
+                  className="
+                  text-gray-600 dark:text-gray-400
+                  mb-8
+                  whitespace-pre-wrap
+                  leading-relaxed
+                  "
+                >
+
+                  {note.content}
+
+                </p>
+
+
+                <div
+                  className="
+                  flex gap-4
+                  "
+                >
+
+                  <button
+                    onClick={() =>
+                      editNote(note)
+                    }
+
+                    className="
+
+                    bg-yellow-500
+
+                    hover:bg-yellow-600
+
+                    text-white
+
+                    px-5 py-3
+
+                    rounded-2xl
+
+                    font-semibold
+
+                    shadow-lg
+
+                    transition-all duration-300
+                    "
+                  >
+
+                    Edit
+
+                  </button>
+
+
+                  <button
+                    onClick={() =>
+                      deleteNote(
+                        note._id
+                      )
+                    }
+
+                    className="
+
+                    bg-red-500
+
+                    hover:bg-red-600
+
+                    text-white
+
+                    px-5 py-3
+
+                    rounded-2xl
+
+                    font-semibold
+
+                    shadow-lg
+
+                    transition-all duration-300
+                    "
+                  >
+
+                    Delete
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        )}
 
       </div>
 
