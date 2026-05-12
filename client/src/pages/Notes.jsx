@@ -33,6 +33,9 @@ function Notes() {
   const recognitionRef =
     useRef(null);
 
+  const finalTranscriptRef =
+    useRef("");
+
 
   // =========================
   // FETCH NOTES
@@ -79,11 +82,10 @@ function Notes() {
       window.SpeechRecognition ||
       window.webkitSpeechRecognition;
 
-    // NOT SUPPORTED
     if (!SpeechRecognition) {
 
       toast.error(
-        "Voice recognition not supported in this browser"
+        "Voice recognition not supported"
       );
 
       return;
@@ -105,12 +107,18 @@ function Notes() {
       1;
 
 
-    // RESULTS
+    // =========================
+    // LIVE SPEECH RESULTS
+    // =========================
+
     recognition.onresult =
       (event) => {
 
-      let transcript =
+      let interimTranscript =
         "";
+
+      let finalTranscript =
+        finalTranscriptRef.current;
 
       for (
         let i =
@@ -120,34 +128,64 @@ function Notes() {
         i++
       ) {
 
-        transcript +=
-
+        const transcript =
           event.results[i][0]
-            .transcript + " ";
+            .transcript;
+
+        // FINAL TEXT
+        if (
+          event.results[i]
+            .isFinal
+        ) {
+
+          finalTranscript +=
+            transcript + " ";
+        }
+
+        // LIVE TEXT
+        else {
+
+          interimTranscript +=
+            transcript;
+        }
       }
+
+      finalTranscriptRef.current =
+        finalTranscript;
 
       setFormData((prev) => ({
 
         ...prev,
 
         content:
-          prev.content +
-          " " +
-          transcript,
+          finalTranscript +
+          interimTranscript,
       }));
     };
 
 
+    // =========================
     // ERRORS
+    // =========================
+
     recognition.onerror =
       (event) => {
 
       console.log(
-        "Speech Recognition Error:",
+        "Speech Error:",
         event.error
       );
 
-      // PERMISSION DENIED
+      // IGNORE ABORT
+      if (
+        event.error ===
+        "aborted"
+      ) {
+
+        return;
+      }
+
+      // MICROPHONE BLOCKED
       if (
         event.error ===
         "not-allowed"
@@ -158,14 +196,14 @@ function Notes() {
         );
       }
 
-      // NO MICROPHONE
+      // NO MIC
       else if (
         event.error ===
         "audio-capture"
       ) {
 
         toast.error(
-          "No microphone detected"
+          "No microphone found"
         );
       }
 
@@ -176,15 +214,11 @@ function Notes() {
       ) {
 
         toast.error(
-          "Network error during voice recognition"
+          "Speech network error"
         );
       }
 
-      // IGNORE ABORTED
-      else if (
-        event.error !==
-        "aborted"
-      ) {
+      else {
 
         toast.error(
           "Voice recognition failed"
@@ -197,19 +231,32 @@ function Notes() {
     };
 
 
-    // END
+    // =========================
+    // AUTO RESTART
+    // =========================
+
     recognition.onend =
       () => {
 
-      setIsListening(
-        false
-      );
+      if (
+        isListening
+      ) {
+
+        try {
+
+          recognition.start();
+
+        } catch (error) {
+
+          console.log(error);
+        }
+      }
     };
 
     recognitionRef.current =
       recognition;
 
-  }, []);
+  }, [isListening]);
 
 
   // =========================
@@ -249,33 +296,30 @@ function Notes() {
 
     try {
 
-      // ASK PERMISSION
       await navigator
         .mediaDevices
         .getUserMedia({
           audio: true,
         });
 
-      if (
-        recognitionRef.current
-      ) {
+      finalTranscriptRef.current =
+        formData.content + " ";
 
-        recognitionRef.current
-          .start();
+      recognitionRef.current
+        ?.start();
 
-        setIsListening(
-          true
-        );
+      setIsListening(
+        true
+      );
 
-        toast.success(
-          "Voice input started"
-        );
-      }
+      toast.success(
+        "Voice started"
+      );
 
     } catch (error) {
 
       toast.error(
-        "Please allow microphone access"
+        "Microphone access denied"
       );
     }
   };
@@ -288,21 +332,16 @@ function Notes() {
   const stopListening =
     () => {
 
-    if (
-      recognitionRef.current
-    ) {
+    recognitionRef.current
+      ?.stop();
 
-      recognitionRef.current
-        .stop();
+    setIsListening(
+      false
+    );
 
-      setIsListening(
-        false
-      );
-
-      toast.success(
-        "Voice input stopped"
-      );
-    }
+    toast.success(
+      "Voice stopped"
+    );
   };
 
 
@@ -345,9 +384,11 @@ function Notes() {
           "Note Updated"
         );
 
-      } else {
+      }
 
-        // CREATE
+      // CREATE
+      else {
+
         await API.post(
 
           "/notes",
@@ -453,9 +494,7 @@ function Notes() {
 
       <h1
         className="
-
         text-5xl font-bold
-
         text-gray-800 mb-10
         "
       >
@@ -472,20 +511,15 @@ function Notes() {
         }
 
         className="
-
         bg-white p-8
-
         rounded-3xl shadow-xl
-
         mb-10
         "
       >
 
         <div
           className="
-
           flex flex-col
-
           gap-5
           "
         >
@@ -506,9 +540,7 @@ function Notes() {
             }
 
             className="
-
             border border-gray-300
-
             rounded-2xl p-4
             "
           />
@@ -517,9 +549,7 @@ function Notes() {
           {/* VOICE BUTTONS */}
           <div
             className="
-
             flex flex-wrap
-
             gap-4
             "
           >
@@ -536,13 +566,9 @@ function Notes() {
               }
 
               className={`
-
               px-6 py-3
-
               rounded-2xl
-
               text-white font-bold
-
               transition-all duration-300
 
               ${
@@ -568,15 +594,10 @@ function Notes() {
               }
 
               className="
-
               px-6 py-3
-
               rounded-2xl
-
               bg-red-500 hover:bg-red-600
-
               text-white font-bold
-
               transition-all duration-300
               "
             >
@@ -604,9 +625,7 @@ function Notes() {
             rows="6"
 
             className="
-
             border border-gray-300
-
             rounded-2xl p-4
             "
           />
@@ -614,13 +633,9 @@ function Notes() {
 
           <button
             className="
-
             bg-blue-600 hover:bg-blue-700
-
             text-white px-8 py-4
-
             rounded-2xl font-semibold
-
             transition-all duration-300
             "
           >
@@ -643,13 +658,9 @@ function Notes() {
       {/* NOTES LIST */}
       <div
         className="
-
         grid grid-cols-1
-
         md:grid-cols-2
-
         xl:grid-cols-3
-
         gap-8
         "
       >
@@ -661,24 +672,17 @@ function Notes() {
             key={note._id}
 
             className="
-
             bg-white p-6
-
             rounded-3xl
-
             shadow-xl
-
             hover:shadow-2xl
-
             transition-all duration-300
             "
           >
 
             <h2
               className="
-
               text-2xl font-bold
-
               text-gray-800 mb-4
               "
             >
@@ -690,11 +694,8 @@ function Notes() {
 
             <p
               className="
-
               text-gray-600
-
               mb-6
-
               whitespace-pre-wrap
               "
             >
@@ -706,30 +707,21 @@ function Notes() {
 
             <div
               className="
-
               flex gap-4
               "
             >
 
               <button
                 onClick={() =>
-                  editNote(
-                    note
-                  )
+                  editNote(note)
                 }
 
                 className="
-
                 bg-yellow-500
-
                 hover:bg-yellow-600
-
                 text-white
-
                 px-5 py-3
-
                 rounded-2xl
-
                 font-semibold
                 "
               >
@@ -747,17 +739,11 @@ function Notes() {
                 }
 
                 className="
-
                 bg-red-500
-
                 hover:bg-red-600
-
                 text-white
-
                 px-5 py-3
-
                 rounded-2xl
-
                 font-semibold
                 "
               >
