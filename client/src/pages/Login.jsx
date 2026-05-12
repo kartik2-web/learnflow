@@ -70,7 +70,7 @@ function Login() {
       );
 
       toast.success(
-        "Login Successful"
+        "Welcome back"
       );
 
       navigate("/dashboard");
@@ -78,7 +78,7 @@ function Login() {
     } catch (error) {
 
       toast.error(
-        "Invalid Credentials"
+        "Invalid email or password"
       );
 
     } finally {
@@ -99,6 +99,8 @@ function Login() {
 
       from-blue-100 via-white to-indigo-100
 
+      dark:from-gray-950 dark:via-gray-900 dark:to-black
+
       flex items-center justify-center
 
       px-4
@@ -110,13 +112,15 @@ function Login() {
 
         w-full max-w-md
 
-        bg-white/80 backdrop-blur-xl
+        bg-white/80 dark:bg-gray-900/90
+
+        backdrop-blur-xl
 
         rounded-3xl shadow-2xl
 
         p-8 md:p-10
 
-        border border-white/30
+        border border-white/30 dark:border-gray-800
         "
       >
 
@@ -163,7 +167,7 @@ function Login() {
 
           </h1>
 
-          <p className="text-gray-500 mt-3">
+          <p className="text-gray-500 dark:text-gray-400 mt-3">
 
             AI Powered Study Platform
 
@@ -196,7 +200,13 @@ function Login() {
 
               className="
 
-              border border-gray-300
+              border border-gray-300 dark:border-gray-700
+
+              bg-white dark:bg-gray-800
+
+              text-gray-900 dark:text-white
+
+              placeholder-gray-500 dark:placeholder-gray-400
 
               rounded-2xl p-5 text-lg
 
@@ -225,7 +235,13 @@ function Login() {
 
               className="
 
-              border border-gray-300
+              border border-gray-300 dark:border-gray-700
+
+              bg-white dark:bg-gray-800
+
+              text-gray-900 dark:text-white
+
+              placeholder-gray-500 dark:placeholder-gray-400
 
               rounded-2xl p-5 text-lg
 
@@ -278,7 +294,7 @@ function Login() {
         {/* FOOTER */}
         <div className="text-center mt-8">
 
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
 
             Don’t have an account?
 

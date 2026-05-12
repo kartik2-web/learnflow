@@ -62,7 +62,7 @@ function Register() {
       );
 
       toast.success(
-        "Registration Successful"
+        "Account created successfully"
       );
 
       navigate("/dashboard");
@@ -94,6 +94,8 @@ function Register() {
 
       from-blue-100 via-white to-indigo-100
 
+      dark:from-gray-950 dark:via-gray-900 dark:to-black
+
       flex items-center justify-center
 
       px-4
@@ -105,13 +107,15 @@ function Register() {
 
         w-full max-w-md
 
-        bg-white/80 backdrop-blur-xl
+        bg-white/80 dark:bg-gray-900/90
+
+        backdrop-blur-xl
 
         rounded-3xl shadow-2xl
 
         p-8 md:p-10
 
-        border border-white/30
+        border border-white/30 dark:border-gray-800
         "
       >
 
@@ -158,7 +162,7 @@ function Register() {
 
           </h1>
 
-          <p className="text-gray-500 mt-3">
+          <p className="text-gray-500 dark:text-gray-400 mt-3">
 
             Create your AI learning account
 
@@ -188,7 +192,13 @@ function Register() {
 
               className="
 
-              border border-gray-300
+              border border-gray-300 dark:border-gray-700
+
+              bg-white dark:bg-gray-800
+
+              text-gray-900 dark:text-white
+
+              placeholder-gray-500 dark:placeholder-gray-400
 
               rounded-2xl p-5 text-lg
 
@@ -215,7 +225,13 @@ function Register() {
 
               className="
 
-              border border-gray-300
+              border border-gray-300 dark:border-gray-700
+
+              bg-white dark:bg-gray-800
+
+              text-gray-900 dark:text-white
+
+              placeholder-gray-500 dark:placeholder-gray-400
 
               rounded-2xl p-5 text-lg
 
@@ -242,7 +258,13 @@ function Register() {
 
               className="
 
-              border border-gray-300
+              border border-gray-300 dark:border-gray-700
+
+              bg-white dark:bg-gray-800
+
+              text-gray-900 dark:text-white
+
+              placeholder-gray-500 dark:placeholder-gray-400
 
               rounded-2xl p-5 text-lg
 
@@ -295,7 +317,7 @@ function Register() {
         {/* FOOTER */}
         <div className="text-center mt-8">
 
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
 
             Already have an account?
 

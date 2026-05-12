@@ -289,6 +289,7 @@ function Notes() {
             "
           >
 
+            {/* TITLE */}
             <input
               type="text"
 
@@ -310,6 +311,10 @@ function Notes() {
 
               bg-white dark:bg-gray-800
 
+              text-gray-900 dark:text-white
+
+              placeholder-gray-500 dark:placeholder-gray-400
+
               rounded-2xl
 
               p-5
@@ -323,6 +328,7 @@ function Notes() {
             />
 
 
+            {/* CONTENT */}
             <textarea
               name="content"
 
@@ -344,6 +350,10 @@ function Notes() {
 
               bg-white dark:bg-gray-800
 
+              text-gray-900 dark:text-white
+
+              placeholder-gray-500 dark:placeholder-gray-400
+
               rounded-2xl
 
               p-5
@@ -357,6 +367,7 @@ function Notes() {
             />
 
 
+            {/* BUTTON */}
             <button
               className="
 
@@ -466,8 +477,6 @@ function Notes() {
 
                 hover:-translate-y-1
 
-                hover:shadow-3xl
-
                 transition-all duration-300
                 "
               >
@@ -487,7 +496,7 @@ function Notes() {
 
                 <p
                   className="
-                  text-gray-600 dark:text-gray-400
+                  text-gray-700 dark:text-gray-300
                   mb-8
                   whitespace-pre-wrap
                   leading-relaxed
