@@ -33,9 +33,6 @@ function Notes() {
   const recognitionRef =
     useRef(null);
 
-  const finalTranscriptRef =
-    useRef("");
-
 
   // =========================
   // FETCH NOTES
@@ -82,10 +79,11 @@ function Notes() {
       window.SpeechRecognition ||
       window.webkitSpeechRecognition;
 
+    // NOT SUPPORTED
     if (!SpeechRecognition) {
 
       toast.error(
-        "Voice recognition not supported"
+        "Voice recognition not supported in this browser"
       );
 
       return;
@@ -97,8 +95,9 @@ function Notes() {
     recognition.continuous =
       true;
 
+    // IMPORTANT
     recognition.interimResults =
-      true;
+      false;
 
     recognition.lang =
       "en-US";
@@ -108,17 +107,14 @@ function Notes() {
 
 
     // =========================
-    // LIVE SPEECH RESULTS
+    // FINAL SPEECH RESULTS ONLY
     // =========================
 
     recognition.onresult =
       (event) => {
 
-      let interimTranscript =
+      let finalText =
         "";
-
-      let finalTranscript =
-        finalTranscriptRef.current;
 
       for (
         let i =
@@ -128,39 +124,33 @@ function Notes() {
         i++
       ) {
 
-        const transcript =
-          event.results[i][0]
-            .transcript;
-
-        // FINAL TEXT
+        // ONLY FINAL RESULTS
         if (
           event.results[i]
             .isFinal
         ) {
 
-          finalTranscript +=
-            transcript + " ";
-        }
+          finalText +=
 
-        // LIVE TEXT
-        else {
-
-          interimTranscript +=
-            transcript;
+            event.results[i][0]
+              .transcript + " ";
         }
       }
 
-      finalTranscriptRef.current =
-        finalTranscript;
+      // ADD FINAL TEXT
+      if (
+        finalText.trim()
+      ) {
 
-      setFormData((prev) => ({
+        setFormData((prev) => ({
 
-        ...prev,
+          ...prev,
 
-        content:
-          finalTranscript +
-          interimTranscript,
-      }));
+          content:
+            prev.content +
+            finalText,
+        }));
+      }
     };
 
 
@@ -176,7 +166,7 @@ function Notes() {
         event.error
       );
 
-      // IGNORE ABORT
+      // IGNORE ABORTED
       if (
         event.error ===
         "aborted"
@@ -196,7 +186,7 @@ function Notes() {
         );
       }
 
-      // NO MIC
+      // NO MICROPHONE
       else if (
         event.error ===
         "audio-capture"
@@ -238,6 +228,7 @@ function Notes() {
     recognition.onend =
       () => {
 
+      // AUTO RESTART
       if (
         isListening
       ) {
@@ -296,30 +287,33 @@ function Notes() {
 
     try {
 
+      // ASK PERMISSION
       await navigator
         .mediaDevices
         .getUserMedia({
           audio: true,
         });
 
-      finalTranscriptRef.current =
-        formData.content + " ";
+      if (
+        recognitionRef.current
+      ) {
 
-      recognitionRef.current
-        ?.start();
+        recognitionRef.current
+          .start();
 
-      setIsListening(
-        true
-      );
+        setIsListening(
+          true
+        );
 
-      toast.success(
-        "Voice started"
-      );
+        toast.success(
+          "Voice input started"
+        );
+      }
 
     } catch (error) {
 
       toast.error(
-        "Microphone access denied"
+        "Please allow microphone access"
       );
     }
   };
@@ -340,7 +334,7 @@ function Notes() {
     );
 
     toast.success(
-      "Voice stopped"
+      "Voice input stopped"
     );
   };
 
