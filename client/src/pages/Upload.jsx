@@ -13,6 +13,9 @@ function Upload() {
   const API_BASE_URL =
     import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  // REMOVE /api FROM URL FOR STATIC FILES
+  const FILE_BASE_URL = API_BASE_URL.replace("/api", "");
+
   // FETCH PDFs
   const fetchPdfs = async () => {
     try {
@@ -215,7 +218,7 @@ function Upload() {
                 {/* BUTTONS */}
                 <div className="flex flex-col md:flex-row gap-4">
                   <a
-                    href={`${API_BASE_URL}${pdf.fileUrl}`}
+                    href={`${FILE_BASE_URL}${pdf.fileUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="
